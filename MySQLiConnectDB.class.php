@@ -4,7 +4,7 @@ class ConnectDB {
     // initialize connection
     function __construct() { 
         // 先寫死連線帳密，之後再看看要怎麼改
-        $this->connect = mysqli_connect("不告訴你","不告訴你","不告訴你","不告訴你");
+        $this->connect = mysqli_connect("nope","nope","nope","nope");
         If(!$this->connect) {
             throw new Exception("Filed to connect DB.");
         }
@@ -21,6 +21,9 @@ class ConnectDB {
         return mysqli_query($this->connect, $str);
         // not catch exception here
         // sql injection warning
+    }
+    public function escape_string($str) {
+        return mysqli_real_escape_string ( $this->connect , $str );
     }
     public function executePreparedStatement($prepared, $paramString = ''){
         $stmt = $this->connect->prepare($prepared);
