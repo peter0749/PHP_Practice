@@ -4,7 +4,7 @@ class ConnectDB {
     // initialize connection
     function __construct() { 
         // 先寫死連線帳密，之後再看看要怎麼改
-        $this->connect = mysqli_connect("nope","nope","nope","nope");
+        $this->connect = mysqli_connect("不告訴你","nope","Не сказать","あなたを教えてくれません!");
         If(!$this->connect) {
             throw new Exception("Filed to connect DB.");
         }
@@ -31,13 +31,27 @@ class ConnectDB {
             $parameters = func_get_args();
             array_shift($parameters); // remove the prepared from the list
             // Array needs to be bound by reference
+            $args=array(); // if PHP5
             foreach ($parameters as $key=>&$value) {
-                $parameters[$key] = &$value;
+                $args[$key] = &$value; // in PHP5 ref is required.
             }
-            call_user_func_array(array($stmt, "bind_param"), $parameters);
+            call_user_func_array(array($stmt, "bind_param"), $args);
         }
+        // debug
+        //$ret = 
         $stmt->execute();
+        /** debug
+        if ($ret) {
+            echo "<H1>OK</H1>";
+        }
+         */
         $result = $stmt->get_result();
+        /** debug
+        if (!$result) {
+            echo "<H1>".$stmt->error."</H1>";
+            exit();
+        }
+         */
         $stmt->close();
         return $result;
     }
